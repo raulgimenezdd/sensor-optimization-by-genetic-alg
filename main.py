@@ -2,15 +2,15 @@ import requests
 import numpy as np
 import random
 
-n_genes = 64
+n_genes = 64 # number of genes of the individual
 
-def http_requests_fitness(chromosome):
+def http_requests_fitness(chromosome): # this function makes an http request in order to obtain the fitness value of an indivdual
     # funcion real: alfa?c=
     url = "http://memento.evannai.inf.uc3m.es/age/test?c="
     r = requests.get(url + chromosome)
     return float(r.text)
 
-def create_individual(): # this function creates a random individual as a binary list with length of 384
+def create_individual(): # this function creates a random individual as a binary list with length of n_genes
     individual = [np.random.randint(0,2) for i in range(n_genes)]
     str_individual = "".join([str(_) for _ in individual])
     return individual
@@ -28,7 +28,7 @@ def evaluate_population(population): # this function gives a fitness value to ea
 
 
 
-def selection_tournaments(evaluated_population, n_participants):
+def selection_tournaments(evaluated_population, n_participants): # this funtion selects the best individuals through tournaments
     selected_population = []
     for j in range (len(evaluated_population)): # as many iterations (tournaments) as individuals to create a new population of the same size
         selected_individual = -1
@@ -43,12 +43,26 @@ def selection_tournaments(evaluated_population, n_participants):
     evaluated_population = selected_population.copy()
     for i in range (len(evaluated_population)): # elimination of the fitness value of each individual from his corresponding list
         evaluated_population[i].pop()
-    print(evaluated_population)
 
-def individuals_crossing(selected_population):
+
+def individuals_crossing(selected_population): # this function mix the genes of the individuals simulating the reproduction
     cross_population = []
+    for i in range (0, n_genes, 2):
+        crossed_individual1 = selected_population[i][:32] + selected_population[i+1][32:] # first_part_ind1 + second_part_ind2
+        crossed_individual2 = selected_population[i+1][:32] + selected_population[i][32:] # first_part_ind2 + second_part_ind1
+        cross_population.append(crossed_individual1)
+        cross_population.append(crossed_individual2)
+    selected_population = cross_population.copy()
 
-
+def mutation(mutation_rate, population):
+    for i in range(len(population)):
+        for j in range(len(population[i])):
+            gonna_mutate = np.random.choice([True, False], size=1, p=[mutation_rate, mutation_rate - 1])[0]
+            if gonna_mutate:
+                if population[i][j] == 1:
+                    population[i][j] = 0
+                else:
+                    population[i][j] = 1
 
 if __name__ == '__main__':
 
@@ -62,3 +76,10 @@ if __name__ == '__main__':
     # selection of the best individuals
     n_participants = 5
     selection_tournaments(population, n_participants)
+
+    # crossing of the selected individuals
+    individuals_crossing(population)
+
+    # mutation of the population
+    mutation_rate = 0.02
+    mutation(mutation_rate, population)
