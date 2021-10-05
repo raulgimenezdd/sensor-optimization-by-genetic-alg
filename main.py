@@ -20,13 +20,14 @@ def create_population(n_individuals): # this function create a random population
     return population
 
 def evaluate_population(population): # this function gives a fitness value to each individual
+    min_fitness = 100000
     for i in range(len(population)):
         str_individual = "".join([str(_) for _ in population[i]])  # we transform the list that represents an individual into a string
         fitness = http_requests_fitness(str_individual)
         population[i].append(fitness)
+        if fitness < min_fitness: # we store the minimum fitness value obtained
+            min_fitness = fitness
         # condicion de parada aqui
-
-
 
 def selection_tournaments(evaluated_population, n_participants): # this funtion selects the best individuals through tournaments
     selected_population = []
@@ -70,16 +71,21 @@ if __name__ == '__main__':
     n_individuals = 5
     population = create_population(n_individuals)
 
-    # evaluation of the population
-    evaluate_population(population)
+    n_iterations = 0
+    max_iterations = 100
+    while (n_iterations < max_iterations):
+        # evaluation of the population
+        evaluate_population(population)
 
-    # selection of the best individuals
-    n_participants = 5
-    selection_tournaments(population, n_participants)
+        # selection of the best individuals
+        n_participants = 5
+        selection_tournaments(population, n_participants)
 
-    # crossing of the selected individuals
-    individuals_crossing(population)
+        # crossing of the selected individuals
+        individuals_crossing(population)
 
-    # mutation of the population
-    mutation_rate = 0.02
-    mutation(mutation_rate, population)
+        # mutation of the population
+        mutation_rate = 0.02
+        mutation(mutation_rate, population)
+
+        n_iterations = n_iterations + 1
