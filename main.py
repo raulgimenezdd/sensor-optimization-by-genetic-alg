@@ -41,9 +41,15 @@ def selection_tournaments(evaluated_population, n_participants): # this funtion 
                 selected_individual = participant
                 fitness_selected = fitness_participant
         selected_population.append(evaluated_population[selected_individual])
-    evaluated_population = selected_population.copy()
-    for i in range (len(evaluated_population)): # elimination of the fitness value of each individual from his corresponding list
-        evaluated_population[i].pop()
+        '''
+        AQUI HAY ERRORES 
+        '''
+        cleaned_population = []
+        a = len(selected_population)
+        for x in range(len(selected_population)):  # elimination of the fitness value of each individual from his corresponding list
+            # evaluated_population[x].pop()
+            cleaned_population.append(selected_population[x][:65])
+        evaluated_population = cleaned_population.copy()
 
 
 def individuals_crossing(selected_population): # this function mix the genes of the individuals simulating the reproduction
@@ -75,10 +81,10 @@ if __name__ == '__main__':
     max_iterations = 100
     while (n_iterations < max_iterations):
         # evaluation of the population
-        evaluate_population(population)
+        evaluate_population(population) # esto lo hace bien
 
         # selection of the best individuals
-        n_participants = 5
+        n_participants = 2
         selection_tournaments(population, n_participants)
 
         # crossing of the selected individuals
