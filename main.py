@@ -1,8 +1,6 @@
 import requests
 import numpy as np
-import random
-import matplotlib
-import matplotlib.pyplot as plt
+
 
 n_genes = 384 # number of genes of the individual
 
