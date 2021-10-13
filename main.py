@@ -20,13 +20,13 @@ def create_individual(): # this function creates a random individual as a binary
     return individual
 
 def create_population(n_individuals): # this function create a random population with a total of n_individuals
-    # print("Creating population...")
+    print("Creating population...")
     population = [create_individual() for i in range(n_individuals)]
     return population
 
 
 def evaluate_population(population):
-   # print("Evaluating population...")
+    print("Evaluating population...")
     fitness_list = []
     for i in range(len(population)):
         str_individual = "".join([str(_) for _ in population[i]])  # we transform the list that represents an individual into a string
@@ -37,7 +37,7 @@ def evaluate_population(population):
 
 
 def selection_tournaments(evaluated_population, fitness_list, n_participants): # this funtion selects the best individuals through tournaments
-   # print("Selecting population...")
+    print("Selecting population...")
     selected_population = []
     for i in range (len(fitness_list)): # as many iterations (tournaments) as individuals to create a new population of the same size
         selected_individual = -1
@@ -64,6 +64,7 @@ def individuals_simple_crossing(selected_population): # this function mix the ge
     return cross_population
 
 def individuals_uniform_crossing(selected_population):
+    print("Crossing population...")
     cross_population = []
     for i in range(0, n_individuals, 2):
         new_individual1 = []
@@ -83,7 +84,7 @@ def individuals_uniform_crossing(selected_population):
 
 
 def mutation(mutation_rate, population):
-   # print("Mutating population...")
+    print("Mutating population...")
     for i in range(len(population)):
         for j in range(len(population[i])):
             gonna_mutate = np.random.choice([True, False], size=1, p=[mutation_rate, 1 - mutation_rate])[0]
@@ -113,16 +114,16 @@ if __name__ == '__main__':
           "-------------------------------------\n")
 
     while (current_generation < max_generations):
-       # print("----------------------------------------------\n" + "GENERATION Nº " + str(current_generation))
+        print("----------------------------------------------\n" + "GENERATION Nº " + str(current_generation))
 
         # evaluation of the population
+
         fitness_list = evaluate_population(population).copy()
         best_fitness_generation = min(fitness_list)
         best_fitness.append(best_fitness_generation)
-        print(str(best_fitness_generation))
+        print("Best fitness: " + str(best_fitness_generation))
 
         # selection of the best individuals
-
         population = selection_tournaments(population, fitness_list, n_participants).copy()
 
         # crossing of the selected individuals
